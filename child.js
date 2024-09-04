@@ -6,7 +6,6 @@ const p = require("process")
 p.on("message", async function (data) {
     if (data == undefined || data == {} || data == "") {
     } else {
-        let cwd = data.cwd
         let taskFunc = data.taskFunc
         let taskArgs = data.taskArgs
         var asyncFn = new Function('return ' + taskFunc)();

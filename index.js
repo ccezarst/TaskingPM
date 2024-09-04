@@ -19,9 +19,9 @@ const globalLogger = {
         console.log(text)
     }
 }
-function initNewProcess(onSpawnCallback) {
+function initNewProcess(onSpawnCallback, cwd) {
     if (availableProcesses.length != maxProcesses) {
-        let proc = new CustomChildProcess(onSpawnCallback)
+        let proc = new CustomChildProcess(onSpawnCallback, cwd)
         availableProcesses.push(proc)
         return proc
     }
@@ -97,7 +97,7 @@ function mainLoop() {
                     removeTaskFromlist: removeTaskFromlist
                 } // newProc is pased as a arg
                 let callback = (function (newProc) {newProc.execTask(this.task); this.removeTaskFromlist(this.task)})
-                newProc = initNewProcess(callback.bind(cacanaca))
+                newProc = initNewProcess(callback.bind(cacanaca), task.cwd)
             }
         }
     }
@@ -112,8 +112,8 @@ setInterval(() => {
 class CustomChildProcess {
     #task
     #spawnedCallback
-    constructor(spawnedCallback) {
-        this.proc = cp.fork("./child")
+    constructor(spawnedCallback, cwd) {
+        this.proc = cp.fork("./child", {cwd: cwd})
         this.id = this.proc.pid
         if (this.id == undefined) {
             throw("Cannot create anymore processes")
@@ -132,12 +132,10 @@ class CustomChildProcess {
         if (!this.working) {
             let tFunc = task.taskFunc
             let tArgs = task.taskArgs
-            let tCwd = task.cwd
             this.#task = task
             let toSend = {
                 taskFunc: tFunc.toString(),
                 taskArgs: tArgs,
-                cwd: tCwd
             }
             let resSent = this.proc.send(toSend)
             if(!resSent) {

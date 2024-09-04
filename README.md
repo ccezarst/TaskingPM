@@ -9,7 +9,7 @@ const taskingPM = require("./index")
 
 After, you can create a new task using
 ```
-taskingPM.newTask(currentWorkingDirectory, taskFunction, taskArguments, callback, customLogger
+taskingPM.newTask(currentWorkingDirectory, taskFunction, taskArguments, callback, customLogger)
 ```
   - currentWorkingDirectory: specified in which directory the processes will be started in, so you can import local files inside the task
   - taskFunction: the function that is going to be ran in paralel

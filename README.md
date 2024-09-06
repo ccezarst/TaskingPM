@@ -9,26 +9,73 @@ const taskingPM = require("taskingPM")
 
 After, you can create a new task using
 ```
-taskingPM.newTask(currentWorkingDirectory, taskFunction, taskArguments, callback, customLogger)
+taskingPM.newTask(currentWorkingDirectory, taskFunction, taskArguments, callback)
 ```
   - currentWorkingDirectory: specified in which directory the processes will be started in, so you can import local files inside the task
   - taskFunction: the function that is going to be ran in paralel
   - taskArguments: parameters that you can pass to the taskFunction to make your life easier
   - callback: after the taskFunction is done and it returns it's result, this callback function is called with the parameter being the result
-  - customLogger: customLogger that exposes the activity of the package, it has to have info error and warn functions that take a single text parameter.
 
 # Working example
 ```
 const taskingPM = require("taskingPM")
 let tasks = 50
+function delay(t, val) {
+    return new Promise(function(resolve) {
+        setTimeout(function() {
+            resolve(val);
+        }, t);
+    });
+}
+
 setTimeout(function () {
     for (let i = 0; i < tasks; i++){
         taskingPM.newTask(process.cwd(), (count) => {
+            delay(Math.random() * 500) // waits a random amount between 0 and 500 ms
             return "Hello world! " + count
         }, i, (result)=> { console.log(result)})
     }
-}, 1000)
 ```
 After waiting one second, the code creates 50 tasks.
-Inside the package, the maximum amount of processes set are created and put to work running our function( return "Hello world!" + count).
-In the console you will see when each task is done and it's count.
+You will see when a task is finished in the console as it prints "Hello world! {taskNumber}" 
+
+# Extra functions
+```
+setLogger(logger)
+```
+By default the package doesn't output any logs.
+Set a custom logger. The logger must include info, error and warn functions that take a single text parameter.
+
+```
+setConfigs(maxIdleTime, maxProcesses) {},
+```
+Set configs.
+maxIdleTime = the maximum amount of time(in ms) a process can be idle before it is killed. Longer times mean that sporatic(chaotic) creation of tasks are handler better but the processes remain open draining a bit of resources.
+maxProcesses = the maximum amount of processes the package can generate
+
+```
+deleteTask(task)
+```
+Deletes a task from the queue so it doesn't execute.
+task = the tasks object(is returned from newTask)
+
+```
+getTasks()
+```
+Returns all of the tasks in the queue in the order they are going to be executed.
+
+```
+getActiveProcesses()
+```
+Returns all open/active processes. The processes come in a CustomChildProcess object from where you can access information such as if the process is idle.
+
+```
+class CustomChildProcess{
+  proc: handle to the nodejs child process
+  id: internal process ID
+  spawned: if the nodejs child process has spawned yet
+  working: true when it's working on a task, false when idle
+  finishedWorkingAtEpoch: when a process finishes working, it marks the date in this variable using Date.now()
+  execTask(task): executes a task. It is recommended that you don't execute tasks manually :/
+  kill: kills the nodejs child process
+```

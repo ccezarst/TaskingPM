@@ -1,5 +1,4 @@
-let tasks = 50
-const globalLogger = {
+const customLogger = {
     warn: function (text) {
         console.log(text)
     },
@@ -11,15 +10,8 @@ const globalLogger = {
     }
 }
 const taskingPM = new require("./index")
-
-function delay(t, val) {
-    return new Promise(function(resolve) {
-        setTimeout(function() {
-            resolve(val);
-        }, t);
-    });
-}
-
+let tasks = 50
+taskingPM.setLogger(customLogger)
 let i = 1
 let interval = setInterval(function () { 
     taskingPM.newTask(process.cwd(), (extra) => {

@@ -3,12 +3,12 @@ const { sign } = require('crypto');
 let tasks = []
 let availableProcesses = []
 let maxProcesses = 20
-const globalLogger = {
+let globalLogger = {
     warn: function (text) { },
     info: function (text) { },
     error: function(text) {}
 }
-// const globalLogger = {
+// let globalLogger = {
 //     warn: function (text) { 
 //         console.log(text)
 //     },
@@ -270,7 +270,7 @@ class Task{
 }
 module.exports = {
     setLogger(logger) {
-        if (!checkLogger(logger)) {
+        if (checkLogger(logger)) {
             globalLogger = logger
         } else {
             throw "Invalid logger passed to setLogger, logger must contain info warn and error functions"

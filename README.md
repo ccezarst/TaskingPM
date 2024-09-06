@@ -46,6 +46,7 @@ setLogger(logger)
 By default the package doesn't output any logs.
 Set a custom logger. The logger must include info, error and warn functions that take a single text parameter.
 
+
 ```
 setConfigs(maxIdleTime, maxProcesses) {},
 ```
@@ -53,24 +54,28 @@ Set configs.
 maxIdleTime = the maximum amount of time(in ms) a process can be idle before it is killed. Longer times mean that sporatic(chaotic) creation of tasks are handler better but the processes remain open draining a bit of resources.
 maxProcesses = the maximum amount of processes the package can generate
 
+
 ```
 deleteTask(task)
 ```
 Deletes a task from the queue so it doesn't execute.
 task = the tasks object(is returned from newTask)
 
+
 ```
 getTasks()
 ```
 Returns all of the tasks in the queue in the order they are going to be executed.
+
 
 ```
 getActiveProcesses()
 ```
 Returns all open/active processes. The processes come in a CustomChildProcess object from where you can access information such as if the process is idle.
 
+
 ```
-class CustomChildProcess{
+class CustomChildProcess {
   proc: handle to the nodejs child process
   id: internal process ID
   spawned: if the nodejs child process has spawned yet
@@ -78,4 +83,5 @@ class CustomChildProcess{
   finishedWorkingAtEpoch: when a process finishes working, it marks the date in this variable using Date.now()
   execTask(task): executes a task. It is recommended that you don't execute tasks manually :/
   kill: kills the nodejs child process
+}
 ```

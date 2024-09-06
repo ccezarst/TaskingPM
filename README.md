@@ -18,8 +18,20 @@ taskingPM.newTask(currentWorkingDirectory, taskFunction, taskArguments, callback
 
 # Working example
 ```
-const taskingPM = require("taskingPM")
 let tasks = 50
+const globalLogger = {
+    warn: function (text) {
+        console.log(text)
+    },
+    info: function (text) {
+        console.log(text)
+    },
+    error: function (text) {
+        console.log(text)
+    }
+}
+const taskingPM = new require("./index")
+
 function delay(t, val) {
     return new Promise(function(resolve) {
         setTimeout(function() {
@@ -28,13 +40,16 @@ function delay(t, val) {
     });
 }
 
-setTimeout(function () {
-    for (let i = 0; i < tasks; i++){
-        taskingPM.newTask(process.cwd(), (count) => {
-            delay(Math.random() * 500) // waits a random amount between 0 and 500 ms
-            return "Hello world! " + count
-        }, i, (result)=> { console.log(result)})
+let i = 1
+let interval = setInterval(function () { 
+    taskingPM.newTask(process.cwd(), (extra) => {
+        return "Hello world! " + extra["count"]
+    }, { count: i }, (result) => { console.log(result) })
+    i += 1;
+    if (i >= tasks) {
+        clearInterval(interval)
     }
+}, 100)
 ```
 After waiting one second, the code creates 50 tasks.
 You will see when a task is finished in the console as it prints "Hello world! {taskNumber}" 

@@ -1,6 +1,6 @@
 # TaskingPM
 A NodeJS process manager module that uses a queue of  tasks to execute functions in paralel
-
+https://github.com/ccezarst/TaskingPM
 # How to use
 To use you need to import the package by using
 ```

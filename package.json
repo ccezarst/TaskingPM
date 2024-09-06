@@ -1,6 +1,6 @@
 {
   "name": "taskingpm",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "Tasking Process Manager is a module that helps with spreading a workload over different processes",
   "main": "index.js",
   "scripts": {

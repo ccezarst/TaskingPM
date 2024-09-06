@@ -2,7 +2,7 @@ const cp = require('child_process');
 const { sign } = require('crypto');
 let tasks = []
 let availableProcesses = []
-const maxProcesses = 20
+let maxProcesses = 20
 // const globalLogger = {
 //     warn: function (text) { },
 //     info: function (text) { },
@@ -40,6 +40,7 @@ function getIdleProcess() {
 function remProcess(proc) {
     const index = availableProcesses.indexOf(proc);
     if (index > -1) { // only splice array when item is found
+        proc.kill()
         availableProcesses.splice(index, 1); // 2nd parameter means remove one item only
         globalLogger.info("Removed process " + proc.id)
         return true
@@ -69,7 +70,7 @@ function removeTaskFromlist(Task) {
         return false
     }
 }
-const maxIdleTime = 300 * 100 // 300 ms * 100 for 30 seconds total
+let maxIdleTime = 300 * 100 // 300 ms * 100 for 30 seconds total default maxProcessIdleTime
 function mainLoop() {
     // first loop through processes, check if any were idle for too long and if any can take new tasks
     for (let proc of availableProcesses) {
@@ -146,6 +147,10 @@ class CustomChildProcess {
         } else {
             return false
         }
+    }
+
+    kill() {
+        this.proc.kill()
     }
 
     #markIdle() {
@@ -271,8 +276,34 @@ module.exports = {
             throw "Invalid logger passed to setLogger, logger must contain info warn and error functions"
         }
     },
-    newTask: async function (cwd, taskFunc, taskArgs, callback, logger) {
-        let nTask = new Task(cwd, taskFunc, taskArgs, callback, logger)
+    setConfigs(maxIdleTime = 300 * 100, maxProcesses = 20) {
+        maxIdleTime = maxIdleTime
+        maxProcesses = maxProcesses
+    },
+    newTask: async function (cwd, taskFunc, taskArgs, callback) {
+        let nTask = new Task(cwd, taskFunc, taskArgs, callback)
         tasks.push(nTask)
+        return nTask
+    },
+    deleteTask: function (task) {
+        removeTaskFromlist(task)
+    },
+    flushTasks: function () {
+        tasks = []
+    },
+    closeAllProcesses: function () {
+        for (let process of availableProcesses) {
+            process.kill()
+        }
+    },
+    getTasks: function () {
+        return tasks
+    },
+    getActiveProcesses: function () {
+        return availableProcesses
+    },
+    exit() {
+        this.flushTasks()
+        this.closeAllProcesses()
     },
 }

@@ -20,20 +20,14 @@ function delay(t, val) {
     });
 }
 
-setTimeout(function () {
-    for (let i = 0; i < tasks; i++){
-        taskingPM.newTask(process.cwd(), (count) => {
-            delay(Math.random() * 500) // waits a random amount between 0 and 500 ms
-            return "Hello world! " + count
-        }, i, (result)=> { console.log(result)})
+let i = 1
+let interval = setInterval(function () { 
+    taskingPM.newTask(process.cwd(), (extra) => {
+        return "Hello world! " + extra["count"]
+    }, { count: i }, (result) => { console.log(result) })
+    i += 1;
+    if (i >= tasks) {
+        clearInterval(interval)
     }
-}, 1000)
-setTimeout(function () {
-    for (let i = 0; i < tasks; i++){
-        taskingPM.newTask(process.cwd(), async (count) => {
-            let caca = Date.now()
-            await new Promise(resolve => setTimeout(resolve, 5000))
-            return Date.now() - caca + " " + count
-        }, i + tasks, (result)=> { console.log(result)})
-    }
-}, 3000)
+}, 100)
+

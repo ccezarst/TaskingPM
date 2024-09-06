@@ -3,22 +3,22 @@ const { sign } = require('crypto');
 let tasks = []
 let availableProcesses = []
 let maxProcesses = 20
-// const globalLogger = {
-//     warn: function (text) { },
-//     info: function (text) { },
-//     error: function(text) {}
-// }
 const globalLogger = {
-    warn: function (text) { 
-        console.log(text)
-    },
-    info: function (text) { 
-        console.log(text)
-    },
-    error: function (text) {
-        console.log(text)
-    }
+    warn: function (text) { },
+    info: function (text) { },
+    error: function(text) {}
 }
+// const globalLogger = {
+//     warn: function (text) { 
+//         console.log(text)
+//     },
+//     info: function (text) { 
+//         console.log(text)
+//     },
+//     error: function (text) {
+//         console.log(text)
+//     }
+// }
 function initNewProcess(onSpawnCallback, cwd) {
     if (availableProcesses.length != maxProcesses) {
         let proc = new CustomChildProcess(onSpawnCallback, cwd)

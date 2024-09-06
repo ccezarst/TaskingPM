@@ -40,13 +40,13 @@ After waiting one second, the code creates 50 tasks.
 You will see when a task is finished in the console as it prints "Hello world! {taskNumber}" 
 
 # Extra functions
+## setLogger
 ```
 setLogger(logger)
 ```
 By default the package doesn't output any logs.
 Set a custom logger. The logger must include info, error and warn functions that take a single text parameter.
-
-
+## setConfigs
 ```
 setConfigs(maxIdleTime, maxProcesses) {},
 ```
@@ -54,25 +54,42 @@ Set configs.
 maxIdleTime = the maximum amount of time(in ms) a process can be idle before it is killed. Longer times mean that sporatic(chaotic) creation of tasks are handler better but the processes remain open draining a bit of resources.
 maxProcesses = the maximum amount of processes the package can generate
 
-
+## deleteTask
 ```
 deleteTask(task)
 ```
 Deletes a task from the queue so it doesn't execute.
 task = the tasks object(is returned from newTask)
 
+## flushTasks
+```
+flushTasks()
+```
+Delete all tasks from the queue
 
+## closeAllProcceses
+```
+closeAllProcesses()
+```
+Close all active processes
+
+## getTasks
 ```
 getTasks()
 ```
 Returns all of the tasks in the queue in the order they are going to be executed.
 
-
+## getActiveProcesses
 ```
 getActiveProcesses()
 ```
 Returns all open/active processes. The processes come in a CustomChildProcess object from where you can access information such as if the process is idle.
 
+## exit
+```
+exit()
+```
+For exiting gracefully. Deletes all tasks and closes all processes
 
 ```
 class CustomChildProcess {

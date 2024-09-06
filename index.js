@@ -114,7 +114,7 @@ class CustomChildProcess {
     #task
     #spawnedCallback
     constructor(spawnedCallback, cwd) {
-        this.proc = cp.fork("./child", {cwd: cwd})
+        this.proc = cp.fork(path.dirname(require.resolve('tasking-pm')) + "/child", {cwd: cwd})
         this.id = this.proc.pid
         if (this.id == undefined) {
             throw("Cannot create anymore processes")

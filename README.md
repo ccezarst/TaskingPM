@@ -18,8 +18,7 @@ taskingPM.newTask(currentWorkingDirectory, taskFunction, taskArguments, callback
 
 # Working example
 ```
-let tasks = 50
-const globalLogger = {
+const customLogger = {
     warn: function (text) {
         console.log(text)
     },
@@ -31,15 +30,8 @@ const globalLogger = {
     }
 }
 const taskingPM = new require("./index")
-
-function delay(t, val) {
-    return new Promise(function(resolve) {
-        setTimeout(function() {
-            resolve(val);
-        }, t);
-    });
-}
-
+let tasks = 50
+taskingPM.setLogger(customLogger)
 let i = 1
 let interval = setInterval(function () { 
     taskingPM.newTask(process.cwd(), (extra) => {
@@ -50,6 +42,8 @@ let interval = setInterval(function () {
         clearInterval(interval)
     }
 }, 100)
+
+
 ```
 After waiting one second, the code creates 50 tasks.
 You will see when a task is finished in the console as it prints "Hello world! {taskNumber}" 

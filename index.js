@@ -268,42 +268,41 @@ class Task{
         }
     }
 }
-module.exports = {
-    setLogger(logger) {
-        if (checkLogger(logger)) {
-            globalLogger = logger
-        } else {
-            throw "Invalid logger passed to setLogger, logger must contain info warn and error functions"
-        }
-    },
-    setConfigs(maxIdleTime = 300 * 100, maxProcesses = 20) {
-        maxIdleTime = maxIdleTime
-        maxProcesses = maxProcesses
-    },
-    newTask: async function (cwd, taskFunc, taskArgs, callback) {
-        let nTask = new Task(cwd, taskFunc, taskArgs, callback)
-        tasks.push(nTask)
-        return nTask
-    },
-    deleteTask: function (task) {
-        removeTaskFromlist(task)
-    },
-    flushTasks: function () {
-        tasks = []
-    },
-    closeAllProcesses: function () {
-        for (let process of availableProcesses) {
-            process.kill()
-        }
-    },
-    getTasks: function () {
-        return tasks
-    },
-    getActiveProcesses: function () {
-        return availableProcesses
-    },
-    exit() {
-        this.flushTasks()
-        this.closeAllProcesses()
-    },
+
+exports.setLogger = function(logger) {
+    if (checkLogger(logger)) {
+        globalLogger = logger
+    } else {
+        throw "Invalid logger passed to setLogger, logger must contain info warn and error functions"
+    }
+}
+exports.setConfigs = function (maxIdleTime = 300 * 100, maxProcesses = 20) {
+    maxIdleTime = maxIdleTime
+    maxProcesses = maxProcesses
+}
+exports.newTask = async function (cwd, taskFunc, taskArgs, callback) {
+    let nTask = new Task(cwd, taskFunc, taskArgs, callback)
+    tasks.push(nTask)
+    return nTask
+}
+exports.deleteTask = function (task) {
+    removeTaskFromlist(task)
+}
+exports.flushTasks = function () {
+    tasks = []
+}
+exports.closeAllProcesses = function () {
+    for (let process of availableProcesses) {
+        process.kill()
+    }
+}
+exports.getTasks = function () {
+    return tasks
+}
+exports.getActiveProcesses = function () {
+    return availableProcesses
+}
+exports.exit = function () {
+    exports.flushTasks()
+    exports.closeAllProcesses()
 }

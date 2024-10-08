@@ -1,6 +1,6 @@
 # TaskingPM
 A NodeJS process manager module that uses a queue of  tasks to execute functions in paralel
-
+! Warning: Currently you can't pass functions as task parameters(need to implement it) !
 https://github.com/ccezarst/TaskingPM
 # How to use
 To use you need to import the package by using
